@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	<head>
+	<meta charset="utf-8"/>
+	<title>strawhat</title>
+	<!-- <link href="css/element_ui.css"/>
+	<link href="css/index.css"/> -->
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="css/index.css">
+
+	<script src="/js/vue.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/js/axios.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/js/vue-router.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/components/blog.js"></script>
+	<script src="/components/user.js"></script>
+	<script src="/components/index.js"></script>
+	<script src="/router.js"></script>
+	<!-- 引入组件库 -->
+	<script src="/js/index.js"></script>
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/wangEditor.min.js"></script>
+	<script src="/js/highlight.min.js"></script>
+	<link href="/css/monokai_sublime.min.css" rel="stylesheet">
+	<style type="text/css">
+		body{
+			background-color: #EBEEF5;
+		}
+		a{
+			text-decoration: none;
+		}
+	</style>
+	</head>
+	<body>
+		<el-container id="main" direction="vertical">  
+		  <el-header>
+			  <el-menu
+				  :default-active="activeIndex"
+				  class="el-menu-demo"
+				  mode="horizontal"
+				  @select="handleSelect"
+				  background-color="#545c64"
+				  text-color="#fff"
+				  active-text-color="#ffd04b">
+			  <el-menu-item index="1">首页</el-menu-item>
+			  <el-menu-item index="2" sec:authorize="hasAnyRole('USER','ADMIN')">博客管理</el-menu-item>
+			  <el-menu-item index="3" sec:authorize="hasAnyRole('USER','ADMIN')">工具箱</el-menu-item>
+			  <el-menu-item index="4" sec:authorize="hasAnyRole('USER','ADMIN')">个人中心</el-menu-item>
+			  <el-menu-item index="5" style="float: right;">
+			  	<a sec:authorize="isAuthenticated()" th:href="@{/logout}"><span style="color:red" sec:authentication="name"></span> 退出</a>
+			  	<a sec:authorize="!isAuthenticated()" th:href="@{/tologin}">登录</a>
+			  </el-menu-item>
+			</el-menu>
+		  </el-header>
+			  <el-main>
+				  <router-view></router-view>
+			  </el-main>
+		  <el-footer>				  
+			  <div style="text-align: center;">
+				<el-link href="https://element.eleme.io" target="_blank">默认链接</el-link>
+				<el-link type="primary">主要链接</el-link>
+				<el-link type="success">成功链接</el-link>
+				<el-link type="warning">警告链接</el-link>
+				<el-link type="danger">危险链接</el-link>
+				<el-link type="info">信息链接</el-link>
+			  </div>				  
+		  </el-footer>		  
+		</el-container>
+		<script>
+			new Vue({
+				el:'#main',
+				router,
+				data:{
+					activeIndex:"1"
+				},
+				methods: {
+					handleSelect(key, keyPath) {
+						switch (key) {
+						case '1':
+							this.activeIndex='1';
+							this.$router.push('/');
+							break;
+						case '2':
+							this.activeIndex='2';
+							this.$router.push('/listblog')
+							break;
+						case '3':
+							this.activeIndex='3';
+							this.$router.push('/user');
+							break;
+						case '4':
+							this.activeIndex='4';
+							this.$router.push('/user');
+							break;
+						case '5':
+							this.activeIndex='5';
+							axios.get('/logout');
+							break;
+
+						default:
+							break;
+						}
+				    }
+				}
+				
+			})
+		</script>
+	</body>
+</html>

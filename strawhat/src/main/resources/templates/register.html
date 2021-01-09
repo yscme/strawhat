@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<title>登录</title>
+<link rel="stylesheet" href="css/index.css">
+<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/axios.js" type="text/javascript" charset="utf-8"></script>
+<!-- 引入组件库 -->
+<script src="js/index.js"></script>
+</head>
+<style type="text/css">
+.login-container {
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    background-clip: padding-box;
+    margin: 180px auto;
+    width: 350px;
+    padding: 35px 35px 15px 35px;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 0 25px #cac6c6;
+    }
+    .title {
+      margin: 0px auto 40px auto;
+      text-align: center;
+      
+      color: #505458;
+    }
+    .remember {
+      margin: 0px 0px 35px 0px;
+    }
+</style>
+<body>
+<div id="dv">
+<el-form :model="loginForm" :rules="fieldRules" ref="loginForm" label-position="left" label-width="0px" class="demo-ruleForm login-container">
+   <h3 class="title">用户注册</h3>
+   <el-form-item prop="username">
+     <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="账号"></el-input>
+   </el-form-item>
+   <el-form-item prop="password">
+     <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码"></el-input>
+   </el-form-item>
+   <el-form-item style="width:100%;">
+   <el-row :gutter="20">
+	  <el-col :span="12"><el-button type="primary" style="width:100%;" @click="reset">重 置</el-button></el-col>
+	  <el-col :span="12"><el-button type="primary" style="width:100%;" @click="login" :loading="logining">注册</el-button></el-col>
+	</el-row>
+	 <el-link style="float: right;" href="/tologin" type="success" :underline="false">已有账号立即登录！</el-link>
+   </el-form-item>
+ </el-form>
+</div>
+<script>
+			
+	new Vue({
+		el:'#dv',
+		data:{
+			logining: false,
+	        loginForm: {
+	          username: '',
+	          password: ''
+	        },
+	        fieldRules: {
+	          account: [
+	            { required: true, message: '请输入账号', trigger: 'blur' },
+	          ],
+	          password: [
+	            { required: true, message: '请输入密码', trigger: 'blur' },
+	          ]
+	        }
+		},
+		methods: {
+			login() {
+		        axios.post('user/insert',this.loginForm).then(resp=>{
+		        	if(resp.data.state){
+		        		this.$message({
+	        	          showClose: true,
+	        	          message: '注册成功!',
+	        	          type: 'success'
+	        	        });	
+		        	}else{
+		        		this.$message({
+	        	          showClose: true,
+	        	          message: resp.data.msg,
+	        	          type: 'error'
+	        	        });
+		        	}
+		        }).catch(err=>{
+		        	this.$message({
+        	          showClose: true,
+        	          message: resp.data.msg,
+        	          type: '未知错误，请联系管理员'
+        	        });
+		        });
+		      },
+		      reset() {
+		        this.$refs.loginForm.resetFields();
+		      }
+		}
+		
+		
+	})
+</script>
+
+</body>
+</html>
