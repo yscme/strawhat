@@ -26,7 +26,7 @@ public class BlogController {
 	private BlogService blogService;
 	@PostMapping("/insert")
 	public Result insert(@RequestBody Blog blog) {
-		if(StringUtil.isNull(blog.getTitle())||StringUtil.isNull(blog.getContent())||StringUtil.isNull(blog.getLabel())) return new Result(false, "标题&内容&标签 不能为空!");
+		if(StringUtil.isNull(blog.getTitle())||StringUtil.isNull(blog.getContent())||StringUtil.isNull(blog.getLabel())) return new Result(false, "标题&内容 不能为空!");
 		if(blogService.insert(blog,true)==1) {
 			LogUtil.info(this.getClass(),blog.getUser().getUsername()+" 发布博客 "+blog.getId());
 			return new Result(true, "博客发布成功");
@@ -65,6 +65,7 @@ public class BlogController {
 		LogUtil.warn(this.getClass(),SecurityContextHolder.getContext().getAuthentication().getName()+" 博客删除失败 "+ids);
 		return new Result(false, "博客删除失败");
 	}
+	//更新状态
 	@PutMapping("/setState/{state}/{ids}")
 	public Result setState(@PathVariable Integer state,@PathVariable Long[] ids) {
 		if(blogService.setStateAll(state,ids)>0) {
@@ -74,13 +75,32 @@ public class BlogController {
 		LogUtil.warn(this.getClass(),SecurityContextHolder.getContext().getAuthentication().getName()+" 博客移动失败 "+ids);
 		return new Result(false, "博客移动失败");
 	}
-	
+	//根据状态获取个人博客列表
 	@GetMapping("/list/{state}")
 	public List<Blog> list(@PathVariable Integer state){
 		return blogService.list(state);
 	}
+	//获取所有状态为1的博客
 	@GetMapping("/listall")
 	public List<Blog> listAll(){
 		return blogService.listAll();
+	}
+	//更新博客内容
+	@PutMapping("/update")
+	public Result update(String title,String label,String text,String content,Long id) {
+		if(id==null) return new Result(false, "博客未选中");
+		if(StringUtil.isNull(title)||StringUtil.isNull(content)||StringUtil.isNull(label)) return new Result(false, "标题&内容 不能为空!");
+		Blog blog=new Blog();
+		blog.setId(id);
+		blog.setText(text);
+		blog.setContent(content);
+		blog.setTitle(title);
+		blog.setLabel(label);
+		if(blogService.update(blog)==1) {
+			LogUtil.info(this.getClass(),SecurityContextHolder.getContext().getAuthentication().getName()+" 博客更新成功 "+id);
+			return new Result(true, "博客更新成功");
+		}
+		LogUtil.warn(this.getClass(),SecurityContextHolder.getContext().getAuthentication().getName()+" 博客更新失败 "+id);
+		return new Result(false, "博客更新失败");
 	}
 }

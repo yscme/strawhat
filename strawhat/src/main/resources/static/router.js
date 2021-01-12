@@ -25,8 +25,12 @@ const router = new VueRouter({
 			component: listblogbak
 		},
 		{
-			path: '/error',
-			component: error
+			path: '/editblog',
+			component: editblog
+		},
+		{
+			path: '/tool',
+			component: tool
 		}
 	]
 	})

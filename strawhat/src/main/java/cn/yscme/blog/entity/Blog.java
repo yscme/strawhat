@@ -10,7 +10,8 @@ import java.io.Serializable;
  *
  */
 public class Blog implements Serializable{
-	private static final long serialVersionUID = -5684862130180953789L;
+
+	private static final long serialVersionUID = 2928658395831348533L;
 	private Long id;
 	private String title;
 	private String label;

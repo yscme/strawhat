@@ -14,6 +14,7 @@
 	<script src="/components/blog.js"></script>
 	<script src="/components/user.js"></script>
 	<script src="/components/index.js"></script>
+	<script src="/components/tool.js"></script>
 	<script src="/router.js"></script>
 	<!-- 引入组件库 -->
 	<script src="/js/index.js"></script>
@@ -23,7 +24,7 @@
 	<link href="/css/monokai_sublime.min.css" rel="stylesheet">
 	<style type="text/css">
 		body{
-			background-color: #EBEEF5;
+			background-color: #EBEEF5;			
 		}
 		a{
 			text-decoration: none;
@@ -56,7 +57,7 @@
 			  </el-main>
 		  <el-footer>				  
 			  <div style="text-align: center;">
-				<el-link href="https://element.eleme.io" target="_blank">默认链接</el-link>
+				<el-link target="_blank">默认链接</el-link>
 				<el-link type="primary">主要链接</el-link>
 				<el-link type="success">成功链接</el-link>
 				<el-link type="warning">警告链接</el-link>
@@ -85,7 +86,7 @@
 							break;
 						case '3':
 							this.activeIndex='3';
-							this.$router.push('/user');
+							this.$router.push('/tool');
 							break;
 						case '4':
 							this.activeIndex='4';
@@ -93,7 +94,7 @@
 							break;
 						case '5':
 							this.activeIndex='5';
-							axios.get('/logout');
+							window.location.href="/logout";
 							break;
 
 						default:

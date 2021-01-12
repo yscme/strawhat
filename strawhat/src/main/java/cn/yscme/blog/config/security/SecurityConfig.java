@@ -40,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 其他界面只有对应的角色（权限）才可以访问
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/register").permitAll()
+                .antMatchers("/user/insert").permitAll()
                 .antMatchers("/blog/listall").permitAll()
                 .antMatchers("/blog/**","/user/**").hasAnyRole("USER","ADMIN");
         // 开启自动配置的登录功能

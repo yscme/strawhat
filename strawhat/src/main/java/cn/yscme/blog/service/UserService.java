@@ -16,6 +16,7 @@ public interface UserService {
      * @param username
      * @param password
      * @return
+     * @throws Exception 
      */
     int insert(String username,String password);
     /**登录
@@ -24,4 +25,9 @@ public interface UserService {
      * @return
      */
     User login(String username,String password);
+    /**获取登录用户信息
+     * @param
+     * @return
+     */
+    User getUser();
 }

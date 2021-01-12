@@ -1,3 +1,7 @@
+//全局变量
+var blogcontent=null;
+
+//写博客
 let writeblog={
 	data(){
 		return{
@@ -22,7 +26,6 @@ let writeblog={
 			});
 		},
 		write(){
-			this.fullscreenLoading = true;
 			axios.post("/blog/insert",{title:this.title,text:this.editor.txt.text(),content:this.editor.txt.html(),label:JSON.stringify(this.label)}).then(resp=>{
 				if(resp.data.state){
 					this.$message({
@@ -40,11 +43,9 @@ let writeblog={
 				  type: 'error',
 				  message: "异常，请联系管理员"
 				});
-			});
-			this.fullscreenLoading = false;		
+			});	
 		},
 		writebak(){
-			this.fullscreenLoading = true;
 			axios.post("/blog/insertbak",{title:this.title,text:this.editor.txt.text(),content:this.editor.txt.html(),label:JSON.stringify(this.label)}).then(resp=>{
 				if(resp.data.state){
 					this.$message({
@@ -63,7 +64,6 @@ let writeblog={
 				  message: "异常，请联系管理员"
 				});
 			});
-			this.fullscreenLoading = false;
 		}
 	},
 	created(){
@@ -134,7 +134,7 @@ let writeblog={
 	</div>
 	`	
 }
-
+//博客列表
 let listblog={
 	data(){
 		return{
@@ -156,8 +156,9 @@ let listblog={
 		handleSelectionChange(val) {
 			this.multipleSelection = val;
 		},
-		handleEdit(index, row) {
-	        console.log(index, row);
+		handleEdit(row) {
+			blogcontent=row;
+			this.$router.push("/editblog");
  		},
 		handleDelete(row){
 			this.$confirm('此操作将永久删除该博客(id:'+row.id+' 标题:'+row.title+'), 是否继续?', '提示', {
@@ -165,15 +166,15 @@ let listblog={
 	          cancelButtonText: '取消',
 	          type: 'warning'
 	        }).then(() => {
-				axios.delete(`blog/delete/${id}`).then(resp=>{
+				axios.delete(`blog/delete/${row.id}`).then(resp=>{
 					if(resp.data.state){
 						this.$message({type: 'success',message: '删除成功!'});
 						axios.get('/blog/list/1').then(resp=>{this.tableData=resp.data;});
 					}else{
-						this.$message({type: 'success',message: resp.data.msg});
+						this.$message({type: 'error',message: resp.data.msg});
 					}					
 				}).catch(err=>{
-					this.$message({type: 'success',message: '删除失败'});
+					this.$message({type: 'error',message: '删除失败'});
 				});
 	        }).catch(() => {
 	          this.$message({
@@ -194,10 +195,10 @@ let listblog={
 						this.$message({type: 'success',message: '移动成功!'});
 						axios.get('/blog/list/1').then(resp=>{this.tableData=resp.data;});
 					}else{
-						this.$message({type: 'success',message: resp.data.msg});
+						this.$message({type: 'error',message: resp.data.msg});
 					}					
 				}).catch(err=>{
-					this.$message({type: 'success',message: '移动失败'});
+					this.$message({type: 'error',message: '移动失败'});
 				});
 	        }).catch(() => {
 	          this.$message({
@@ -218,10 +219,10 @@ let listblog={
 						this.$message({type: 'success',message: '删除成功!'});
 						axios.get('/blog/list/1').then(resp=>{this.tableData=resp.data;});
 					}else{
-						this.$message({type: 'success',message: resp.data.msg});
+						this.$message({type: 'error',message: resp.data.msg});
 					}					
 				}).catch(err=>{
-					this.$message({type: 'success',message: '删除失败'});
+					this.$message({type: 'error',message: '删除失败'});
 				});
 	        }).catch(() => {
 	          this.$message({
@@ -282,8 +283,10 @@ let listblog={
 	      prop="title">
 	    </el-table-column>
 	    <el-table-column
-	      label="标签"
-	      prop="label">
+	      label="标签">
+		<template slot-scope="scope">
+		<el-tag v-for="l in JSON.parse(scope.row.label)"  effect="plain" size="mini">{{l}}</el-tag>
+		</template>
 	    </el-table-column>
 		<el-table-column
 	      label="时间"
@@ -294,7 +297,7 @@ let listblog={
 	      <template slot-scope="scope">
 	        <el-button
 	          size="mini"
-	          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+	          @click="handleEdit(scope.row)">编辑</el-button>
 	        <el-button
 	          size="mini"
 	          type="danger"
@@ -305,7 +308,7 @@ let listblog={
 	</div>
 	`
 }
-
+//草稿列表
 let listblogbak={
 	data(){
 		return{
@@ -327,8 +330,9 @@ let listblogbak={
 		handleSelectionChange(val) {
         	this.multipleSelection = val;
 		},
-		handleEdit(index, row) {
-	        console.log(index, row);
+		handleEdit(row) {
+	        blogcontent=row;
+			this.$router.push("/editblog");
  		},
 		handleDelete(row){
 			this.$confirm('此操作将永久删除该博客(id:'+row.id+' 标题:'+row.title+'), 是否继续?', '提示', {
@@ -336,17 +340,17 @@ let listblogbak={
 	          cancelButtonText: '取消',
 	          type: 'warning'
 	        }).then(() => {
-				axios.delete(`blog/delete/${id}`).then(resp=>{
+				axios.delete(`/blog/delete/${row.id}`).then(resp=>{
 					if(resp.data.state){
 						this.$message({type: 'success',message: '删除成功!'});
 						axios.get('/blog/list/0').then(resp=>{this.tableData=resp.data;});
 					}else{
-						this.$message({type: 'success',message: resp.data.msg});
+						this.$message({type: 'error',message: resp.data.msg});
 					}					
 				}).catch(err=>{
-					this.$message({type: 'success',message: '删除失败'});
+					this.$message({type: 'error',message: '删除失败'});
 				});
-	        }).catch(() => {
+	        }).catch((err) => {
 	          this.$message({
 	            type: 'info',
 	            message: '已取消删除'
@@ -365,10 +369,10 @@ let listblogbak={
 						this.$message({type: 'success',message: '发布成功!'});
 						axios.get('/blog/list/0').then(resp=>{this.tableData=resp.data;});
 					}else{
-						this.$message({type: 'success',message: resp.data.msg});
+						this.$message({type: 'error',message: resp.data.msg});
 					}					
 				}).catch(err=>{
-					this.$message({type: 'success',message: '发布失败'});
+					this.$message({type: 'error',message: '发布失败'});
 				});
 	        }).catch(() => {
 	          this.$message({
@@ -389,10 +393,10 @@ let listblogbak={
 						this.$message({type: 'success',message: '删除成功!'});
 						axios.get('/blog/list/0').then(resp=>{this.tableData=resp.data;});
 					}else{
-						this.$message({type: 'success',message: resp.data.msg});
+						this.$message({type: 'error',message: resp.data.msg});
 					}					
 				}).catch(err=>{
-					this.$message({type: 'success',message: '删除失败'});
+					this.$message({type: 'error',message: '删除失败'});
 				});
 	        }).catch(() => {
 	          this.$message({
@@ -441,7 +445,7 @@ let listblogbak={
 	    </el-table-column>
 	    <el-table-column type="expand">
 	      <template slot-scope="props">
-				<div v-html="props.row.content"></div>
+			<div v-html="props.row.content"></div>
 	      </template>
 	    </el-table-column>
 	    <el-table-column
@@ -454,8 +458,10 @@ let listblogbak={
 	      prop="title">
 	    </el-table-column>
 	    <el-table-column
-	      label="标签"
-	      prop="label">
+	      label="标签">
+		<template slot-scope="scope">
+		<el-tag v-for="l in JSON.parse(scope.row.label)"  effect="plain" size="mini">{{l}}</el-tag>
+		</template>
 	    </el-table-column>
 		<el-table-column
 	      label="时间"
@@ -466,7 +472,7 @@ let listblogbak={
 	      <template slot-scope="scope">
 	        <el-button
 	          size="mini"
-	          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+	          @click="handleEdit(scope.row)">编辑</el-button>
 	        <el-button
 	          size="mini"
 	          type="danger"
@@ -476,4 +482,127 @@ let listblogbak={
 	  </el-table>
 	</div>
 	`
+}
+
+let editblog={
+	data(){
+		return{
+			editor:null,
+			title:'',
+			label:[],
+			content:'',
+			text:'',
+			id:0
+		};
+	},
+	computed:{
+		
+	},
+	methods:{
+		getHtml(){
+	    	  console.log(this.editor.txt.html());
+	    },
+		clear(){
+			this.editor.txt.clear();
+			this.$message({
+			  type: 'success',
+			  message: '清空成功!'
+			});
+		},
+		update(){
+			let formData = new FormData();
+			formData.append("title",this.title);
+			formData.append("label",JSON.stringify(this.label));
+			formData.append("text",this.editor.txt.text());
+			formData.append("content",this.editor.txt.html());
+			formData.append("id",this.id);
+	        axios.put('/blog/update',formData,{headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then(resp=>{
+	        	if(resp.data.state){
+	        		this.$message({type: 'success',message: '更新成功!'});
+	        	}else{
+	        		this.$message({type: 'error',message: '更新失败!'});
+	        	}
+	        });
+		},
+		exit(){
+			if(blogcontent.state==1){
+				this.$router.push("/listblog")
+			}else if(blogcontent.state==0){
+				this.$router.push("/listblogbak")
+			}
+		}
+	},
+	created(){
+		if(blogcontent==null){
+			this.$router.push("/listblog");
+		}else{
+			this.title=blogcontent.title;
+			this.label=JSON.parse(blogcontent.label);
+			this.content=blogcontent.content;
+			this.text=blogcontent.text;
+			this.id=blogcontent.id;
+			const E = window.wangEditor;
+				this.editor = new E('#editor');
+				this.editor.config.placeholder = "";
+				this.editor.config.height = 500;
+				this.editor.config.focus=true;
+				this.editor.config.pasteIgnoreImg = false; //忽略粘贴的图片
+				this.editor.config.pasteFilterStyle = false //关闭样式过滤
+				this.editor.config.uploadImgShowBase64 = true;
+				this.editor.$textElem.attr('contenteditable', true);
+				this.editor.highlight = hljs;
+				this.editor.config.languageTab = '    ';
+				this.editor.config.onchange = function (newHtml) {
+    				this.content=newHtml;
+					this.text=$(".w-e-text").text();
+				}
+				// 配置粘贴文本的内容处理
+				//this.editor.config.pasteTextHandle = function (pasteStr) {
+				    // 对粘贴的文本进行处理，然后返回处理后的结果
+				   // return pasteStr + '巴拉巴拉'
+				// }		
+		}
+	},
+	mounted(){
+		if(blogcontent!=null){
+			this.editor.create();
+		}    
+	 	// 禁用
+	    //editor.disable();  
+	    // 启用
+	    //editor.enable();
+	},
+	template:`
+	<div>
+		<el-row :gutter="20">
+		  	<el-col :span="16">
+				<el-input
+				  placeholder="请输入标题"
+				  v-model="title"
+				  clearable>
+				</el-input>
+				<el-checkbox-group v-model="label">
+				  <el-checkbox label="知识"></el-checkbox>
+				  <el-checkbox label="技术"></el-checkbox>
+				  <el-checkbox label="分享"></el-checkbox>
+				  <el-checkbox label="软件"></el-checkbox>
+				  <el-checkbox label="疑问"></el-checkbox>
+			 	  <el-checkbox label="活动"></el-checkbox>
+				  <el-checkbox label="其他"></el-checkbox>
+				</el-checkbox-group>
+			</el-col>
+		  	<el-col :span="8">
+				<el-button-group>
+				<el-tooltip class="item" effect="dark" content="保存" placement="top">
+				 	<el-button @click="update()" type="primary" icon="el-icon-folder" plain></el-button>
+				</el-tooltip>
+				<el-tooltip class="item" effect="dark" content="关闭" placement="top">
+			  		<el-button @click="exit()" type="primary" icon="el-icon-switch-button" plain></el-button>
+				</el-tooltip>
+				</el-button-group>	
+			</el-col>
+		</el-row>				
+		<div id="editor" style="margin-top: 20px;" v-html="content"></div>
+	</div>
+	`	
 }

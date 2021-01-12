@@ -4,6 +4,7 @@
 package cn.yscme.blog.mapper;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -25,6 +26,12 @@ import cn.yscme.blog.entity.User;
  */
 @Mapper
 public interface BlogMapper {
+	//id获取内容
+	@Select("select * from blog where id=#{id}")
+	Blog findById(Long id);
+	//用户id获取所有博客
+	@Select("select * from blog where userId=#{userId}")
+	Set<Blog> findByUserId(Long userId);
 	//发布
 	@Insert("insert blog(userId,title,label,text,content,time,state) values(#{user.id},#{title},#{label},#{text},#{content},#{time},#{state})")
 	int insert(Blog blog);
@@ -39,12 +46,15 @@ public interface BlogMapper {
 	})
 	List<Blog> listAll(Integer state);
 	//删除博客
-	@Delete("delete from blog where id=#{id}")
-	int delete(Long id);
+	@Delete("delete from blog where userId=#{userId} and id=#{id}")
+	int delete(@Param("userId")Long userId,Long id);
 	//删除多个
-	@Delete("<script>delete from blog where id in <foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach></script>")
-	int deleteAll(Long[] ids);
+	@Delete("<script>delete from blog where userId=#{userId} and id in <foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach></script>")
+	int deleteAll(@Param("userId")Long userId,Long[] ids);
 	//更新状态
-	@Update("<script>update blog set state=#{state} where id in <foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach></script>")
-	int setStateAll(@Param("state") Integer state,@Param("ids") Long[] ids);
+	@Update("<script>update blog set state=#{state} where userId=#{userId} and id in <foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach></script>")
+	int setStateAll(@Param("userId") Long userId,@Param("state") Integer state,@Param("ids") Long[] ids);
+	//更新内容
+	@Update("update blog set title=#{title},label=#{label},text=#{text},content=#{content} where userId=#{user.id} and id=#{id}")
+	int update(Blog blog);
 }

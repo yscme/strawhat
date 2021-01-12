@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import cn.yscme.blog.entity.Blog;
+import cn.yscme.blog.entity.User;
 import cn.yscme.blog.mapper.BlogMapper;
 import cn.yscme.blog.mapper.UserMapper;
 import cn.yscme.blog.service.BlogService;
@@ -46,19 +47,28 @@ public class BlogServiceImpl implements BlogService{
 	@Override
 	public int delete(Long id) {
 		// TODO Auto-generated method stub
-		return blogMapper.delete(id);
+		return blogMapper.delete(userMapper.getIdIsName(SecurityContextHolder.getContext().getAuthentication().getName()),id);
 	}
 
 	@Override
 	public int deleteAll(Long[] ids) {
 		// TODO Auto-generated method stub
-		return blogMapper.deleteAll(ids);
+		return blogMapper.deleteAll(userMapper.getIdIsName(SecurityContextHolder.getContext().getAuthentication().getName()),ids);
 	}
 
 	@Override
 	public int setStateAll(Integer state, Long[] ids) {
 		// TODO Auto-generated method stub
-		return blogMapper.setStateAll(state, ids);
+		return blogMapper.setStateAll(userMapper.getIdIsName(SecurityContextHolder.getContext().getAuthentication().getName()),state, ids);
+	}
+
+	@Override
+	public int update(Blog blog) {
+		User user=new User();
+		user.setId(userMapper.getIdIsName(SecurityContextHolder.getContext().getAuthentication().getName()));
+		blog.setUser(user);
+		// TODO Auto-generated method stub
+		return blogMapper.update(blog);
 	}
 	
 }

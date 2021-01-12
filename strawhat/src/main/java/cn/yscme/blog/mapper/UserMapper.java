@@ -3,11 +3,19 @@
  */
 package cn.yscme.blog.mapper;
 
+import java.util.List;
+import java.util.Set;
+
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.mapping.FetchType;
 
+import cn.yscme.blog.entity.Blog;
 import cn.yscme.blog.entity.User;
 import cn.yscme.blog.enums.UserRoleType;
 
@@ -58,4 +66,13 @@ public interface UserMapper {
 		    		@Param(value = "state") Integer state);
     @Select("select * from user where username=#{username} and password=#{password}")
     User login(@Param("username") String username,@Param("password")String password);
+    /** user blog联合查询 一对多
+     * @param username
+     * @return
+     */
+    @Select("select id,username,type,about,state,id userId from user where username=#{username}")
+    @Results(id = "user",value = {
+    		@Result(column = "userId",property = "blogs",javaType =Set.class ,many = @Many(select = "cn.yscme.blog.mapper.BlogMapper.findByUserId",fetchType = FetchType.LAZY))
+    })
+    User getUser(String username);
 }

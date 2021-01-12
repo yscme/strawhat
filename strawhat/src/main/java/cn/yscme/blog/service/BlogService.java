@@ -17,4 +17,6 @@ public interface BlogService {
 	int deleteAll(Long[] ids);
 	//更新状态
 	int setStateAll(Integer state,Long[] ids);
+	//更新内容
+	int update(Blog blog);
 }
