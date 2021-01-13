@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	<head>
+	<meta charset="utf-8"/>
+	<title th:text="${blog.title}"></title>
+	<!-- <link href="css/element_ui.css"/>
+	<link href="css/index.css"/> -->
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="/css/index.css">
+	<script src="/js/vue.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/js/index.js"></script>
+	<style type="text/css">
+		body{
+			background-color: #EBEEF5;
+		}
+		a{
+			text-decoration: none;
+		}
+	</style>
+	</head>
+	<body>
+	<el-container id="main" direction="vertical">  
+		  <el-header>
+			<el-menu
+			 class="el-menu-demo"
+			 mode="horizontal"
+			 @select="handleSelect"
+			 background-color="#545c64"
+			 text-color="#fff"
+			 active-text-color="#ffd04b">
+			<el-menu-item index="1">退出</el-menu-item>
+			<el-menu-item index="2" style="float: right;">
+			<a sec:authorize="isAuthenticated()" th:href="@{/logout}"><span style="color:red" sec:authentication="name"></span> 退出</a>
+			<a sec:authorize="!isAuthenticated()" th:href="@{/tologin}">登录</a>
+			  </el-menu-item>
+			</el-menu>
+		  </el-header>
+			<el-main>
+				<el-card class="box-card">
+				 <div slot="header" class="clearfix">
+					<span th:text="${blog.title}"></span>
+				   <el-button style="float: right; padding: 3px 0" type="text">编辑</el-button>
+				  </div>
+					<el-tag type="success" th:text="${'作者: '+blog.user.username}" size="mini"></el-tag>
+					<el-tag type="info" th:text="${'时间：'+blog.time}" size="mini"></el-tag>
+					<el-tag th:if="${blog.label != '[]' }" effect="plain" th:text="${'标签: '+blog.label}" size="mini"></el-tag>
+				    <i style="float: right;margin-left:20px;" class="el-icon-star-on">599</i>
+				    <i style="float: right;margin-left:20px;" class="el-icon-s-comment">3999</i>&nbsp;&nbsp;
+				    <i style="float: right;" class="el-icon-s-opportunity">49</i>&nbsp;&nbsp;
+				    <div th:utext="${blog.content}" class="text item"></div>
+				</el-card>
+				<el-card class="box-card" style="margin-top:50px">
+					<span sec:authorize="isAuthenticated()" style="color:red" sec:authentication="name"></span>
+					<a sec:authorize="!isAuthenticated()" th:href="@{/tologin}">登录</a>
+					<el-input style="width: 300px;"></el-input><el-button type="info" plain>评论</el-button>
+					
+				<div v-for="v in 6"><a href="#">用户:</a>评论列表：{{v}}</div>
+				</el-card>
+				
+			</el-main>
+		  <el-footer>
+			  <div style="text-align: center;">
+				<el-link target="_blank">默认链接</el-link>
+				<el-link type="primary">主要链接</el-link>
+				<el-link type="success">成功链接</el-link>
+				<el-link type="warning">警告链接</el-link>
+				<el-link type="danger">危险链接</el-link>
+				<el-link type="info">信息链接</el-link>
+			  </div>				  
+		  </el-footer>		  
+		</el-container>
+	<script type="text/javascript">
+		new Vue({
+			el:'#main',
+			data:{
+				
+			},
+			methods: {
+				handleSelect(key, keyPath) {
+					switch (key) {
+					case '1':
+						window.location.href="/";
+						break;
+					case '2':					
+						window.location.href="/logout";
+						break;
+					default:
+						break;
+					}
+			    }
+			}
+		})
+	</script>
+	</body>
+</html>
