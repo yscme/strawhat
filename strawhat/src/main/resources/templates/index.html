@@ -3,11 +3,8 @@
 	<head>
 	<meta charset="utf-8"/>
 	<title>strawhat</title>
-	<!-- <link href="css/element_ui.css"/>
-	<link href="css/index.css"/> -->
 	<!-- 引入样式 -->
-	<link rel="stylesheet" href="css/index.css">
-
+	<link rel="stylesheet" href="/css/index.css">
 	<script src="/js/vue.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/js/axios.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/js/vue-router.js" type="text/javascript" charset="utf-8"></script>
@@ -82,15 +79,15 @@
 							break;
 						case '2':
 							this.activeIndex='2';
-							this.$router.push('/listblog')
+							this.$router.push('/path/listblog')
 							break;
 						case '3':
 							this.activeIndex='3';
-							this.$router.push('/tool');
+							this.$router.push('/path/tool');
 							break;
 						case '4':
 							this.activeIndex='4';
-							this.$router.push('/user');
+							this.$router.push('/path/user');
 							break;
 						case '5':
 							this.activeIndex='5';

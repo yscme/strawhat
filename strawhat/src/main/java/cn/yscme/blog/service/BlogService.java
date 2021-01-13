@@ -19,4 +19,6 @@ public interface BlogService {
 	int setStateAll(Integer state,Long[] ids);
 	//更新内容
 	int update(Blog blog);
+	//获取单个博客内容
+	Blog getBlogById(Long id);
 }

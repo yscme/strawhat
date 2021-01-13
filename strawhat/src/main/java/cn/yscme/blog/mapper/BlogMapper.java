@@ -57,4 +57,8 @@ public interface BlogMapper {
 	//更新内容
 	@Update("update blog set title=#{title},label=#{label},text=#{text},content=#{content} where userId=#{user.id} and id=#{id}")
 	int update(Blog blog);
+	//获取单个博客(并非草稿)内容
+	@Select("select * from blog where state=1 and id=#{id}")
+	@ResultMap("blog")
+	Blog getBlogById(Long id);
 }

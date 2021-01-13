@@ -70,5 +70,11 @@ public class BlogServiceImpl implements BlogService{
 		// TODO Auto-generated method stub
 		return blogMapper.update(blog);
 	}
+
+	@Override
+	public Blog getBlogById(Long id) {
+		// TODO Auto-generated method stub
+		return blogMapper.getBlogById(id);
+	}
 	
 }

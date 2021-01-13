@@ -25,7 +25,7 @@ let user={
 			this.userData=user;
 		}).catch(()=>{
 			
-		})
+		}) 
 	},
 	template:`
 	<el-card class="box-card" :body-style="{height: '700px'}">

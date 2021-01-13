@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.yscme.blog.entity.Blog;
@@ -102,5 +103,15 @@ public class BlogController {
 		}
 		LogUtil.warn(this.getClass(),SecurityContextHolder.getContext().getAuthentication().getName()+" 博客更新失败 "+id);
 		return new Result(false, "博客更新失败");
+	}
+	//根据id获取博客内容
+	@GetMapping("/{id}")
+	@ResponseBody
+	public Result getBlogById(@PathVariable Long id) {
+		Blog blog=blogService.getBlogById(id);
+		if(blog==null) {
+			return new Result(false, "未找个该博客");
+		}
+		return new Result(true, blog, "");	
 	}
 }

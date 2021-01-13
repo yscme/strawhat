@@ -94,9 +94,9 @@ let writeblog={
 	template:`
 	<div>
 	<div style="margin-bottom: 20px;">
-	<router-link to="/listblog"><el-radio v-model="radio" label="1" border>我的发布</el-radio></router-link>
-    <router-link to="/listblogbak"><el-radio v-model="radio" label="2" border>我的草稿</el-radio></router-link>
-	<router-link to="/writeblog"><el-radio v-model="radio" label="3" border>我要发布</el-radio></router-link>
+	<router-link to="/path/listblog"><el-radio v-model="radio" label="1" border>我的发布</el-radio></router-link>
+    <router-link to="/path/listblogbak"><el-radio v-model="radio" label="2" border>我的草稿</el-radio></router-link>
+	<router-link to="/path/writeblog"><el-radio v-model="radio" label="3" border>我要发布</el-radio></router-link>
 	</div>
 		<el-row :gutter="20">
 		  	<el-col :span="16">
@@ -158,7 +158,7 @@ let listblog={
 		},
 		handleEdit(row) {
 			blogcontent=row;
-			this.$router.push("/editblog");
+			this.$router.push("/path/editblog");
  		},
 		handleDelete(row){
 			this.$confirm('此操作将永久删除该博客(id:'+row.id+' 标题:'+row.title+'), 是否继续?', '提示', {
@@ -245,9 +245,9 @@ let listblog={
 	template:`
 	<div>
 	<div style="margin-bottom: 20px;">
-	<router-link to="/listblog"><el-radio v-model="radio" label="1" border>我的发布</el-radio></router-link>
-    <router-link to="/listblogbak"><el-radio v-model="radio" label="2" border>我的草稿</el-radio></router-link>
-	<router-link to="/writeblog"><el-radio v-model="radio" label="3" border>我要发布</el-radio></router-link>
+	<router-link to="/path/listblog"><el-radio v-model="radio" label="1" border>我的发布</el-radio></router-link>
+    <router-link to="/path/listblogbak"><el-radio v-model="radio" label="2" border>我的草稿</el-radio></router-link>
+	<router-link to="/path/writeblog"><el-radio v-model="radio" label="3" border>我要发布</el-radio></router-link>
 	</div>
 	<el-button-group>
 		<el-tooltip class="item" effect="dark" content="转移到草稿" placement="top">
@@ -332,7 +332,7 @@ let listblogbak={
 		},
 		handleEdit(row) {
 	        blogcontent=row;
-			this.$router.push("/editblog");
+			this.$router.push("/path/editblog");
  		},
 		handleDelete(row){
 			this.$confirm('此操作将永久删除该博客(id:'+row.id+' 标题:'+row.title+'), 是否继续?', '提示', {
@@ -420,9 +420,9 @@ let listblogbak={
 	template:`
 	<div>
 	<div style="margin-bottom: 20px;">
-	<router-link to="/listblog"><el-radio v-model="radio" label="1" border>我的发布</el-radio></router-link>
-    <router-link to="/listblogbak"><el-radio v-model="radio" label="2" border>我的草稿</el-radio></router-link>
-	<router-link to="/writeblog"><el-radio v-model="radio" label="3" border>我要发布</el-radio></router-link>
+	<router-link to="/path/listblog"><el-radio v-model="radio" label="1" border>我的发布</el-radio></router-link>
+    <router-link to="/path/listblogbak"><el-radio v-model="radio" label="2" border>我的草稿</el-radio></router-link>
+	<router-link to="/path/writeblog"><el-radio v-model="radio" label="3" border>我要发布</el-radio></router-link>
 	</div>
 	<el-button-group>
 		<el-tooltip class="item" effect="dark" content="发布选项" placement="top">
@@ -526,15 +526,15 @@ let editblog={
 		},
 		exit(){
 			if(blogcontent.state==1){
-				this.$router.push("/listblog")
+				this.$router.push("/path/listblog")
 			}else if(blogcontent.state==0){
-				this.$router.push("/listblogbak")
+				this.$router.push("/path/listblogbak")
 			}
 		}
 	},
 	created(){
 		if(blogcontent==null){
-			this.$router.push("/listblog");
+			this.$router.push("/path/listblog");
 		}else{
 			this.title=blogcontent.title;
 			this.label=JSON.parse(blogcontent.label);
